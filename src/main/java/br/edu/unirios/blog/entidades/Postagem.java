@@ -3,6 +3,8 @@ package br.edu.unirios.blog.entidades;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,7 +17,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor 
 @NoArgsConstructor 
 @EqualsAndHashCode(of = "id")
 @Getter 
@@ -32,6 +33,7 @@ public class Postagem implements Serializable{
 	
 	private String titulo;
 	
+	@Column(nullable=false, length=50000)
 	private String texto;
 	
 	@ManyToOne
@@ -39,5 +41,15 @@ public class Postagem implements Serializable{
 	
 	@OneToMany(mappedBy = "postagem")
 	private List<Comentario> comentarios = new ArrayList<>();
+
+	public Postagem(Integer id, String titulo, String texto, Autor autor) {
+		super();
+		this.id = id;
+		this.titulo = titulo;
+		this.texto = texto;
+		this.autor = autor;
+	}
+	
+	
 
 }

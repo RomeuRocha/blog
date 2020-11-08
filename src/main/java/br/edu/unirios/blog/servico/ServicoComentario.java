@@ -6,28 +6,28 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.edu.unirios.blog.entidades.Postagem;
-import br.edu.unirios.blog.repositorio.RepositorioPostagem;
+import br.edu.unirios.blog.entidades.Comentario;
+import br.edu.unirios.blog.repositorio.RepositorioComentario;
 import br.edu.unirios.blog.servico.erros.ObjetoNaoEncontrado;
 
 
 @Service
-public class ServicoPostagem {
+public class ServicoComentario {
 	
 	@Autowired
-	private RepositorioPostagem repo;
+	private RepositorioComentario repo;
 	
-	public List<Postagem> buscarTodos(){
+	public List<Comentario> buscarTodos(){
 		return repo.findAll();
 	}
 	
-	public Postagem buscar(int id) {
-		Optional<Postagem> obj = repo.findById(id);
+	public Comentario buscar(int id) {
+		Optional<Comentario> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjetoNaoEncontrado(
-				"Objeto não encontrado! Id: " + id + ", Tipo: " + Postagem.class.getName()));	
+				"Objeto não encontrado! Id: " + id + ", Tipo: " + Comentario.class.getName()));	
 	}
 	
-	public Postagem salvar(Postagem obj) {
+	public Comentario salvar(Comentario obj) {
 		obj.setId(null);
 		return repo.save(obj);
 	}
@@ -36,17 +36,16 @@ public class ServicoPostagem {
 		repo.deleteById(id);
 	}
 	
-	public Postagem editar(Postagem obj) {
-		Postagem newObj = buscar(obj.getId());
+	public Comentario editar(Comentario obj) {
+		Comentario newObj = buscar(obj.getId());
 		modificar(newObj, obj);
 		return repo.save(newObj);
 		
 	}
-	private void modificar(Postagem newObj, Postagem obj) {
+	private void modificar(Comentario newObj, Comentario obj) {
 		newObj.setAutor(obj.getAutor());
-		newObj.setComentarios(obj.getComentarios());
+		newObj.setPostagem(obj.getPostagem());
 		newObj.setTexto(obj.getTexto());
-		newObj.setTitulo(obj.getTitulo());
 	}
 	
 }

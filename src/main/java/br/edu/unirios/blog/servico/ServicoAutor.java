@@ -4,14 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import br.edu.unirios.blog.entidades.Autor;
 import br.edu.unirios.blog.repositorio.RepositorioAutor;
-import br.edu.unirios.blog.servico.erros.ErroIntegridade;
 import br.edu.unirios.blog.servico.erros.ObjetoNaoEncontrado;
-
 
 
 @Service
@@ -23,8 +20,6 @@ public class ServicoAutor {
 	public List<Autor> buscarTodos(){
 		return repo.findAll();
 	}
-
-	// + outros métodos
 	
 	public Autor buscar(int id) {
 		Optional<Autor> obj = repo.findById(id);
@@ -36,25 +31,18 @@ public class ServicoAutor {
 		obj.setId(null);
 		return repo.save(obj);
 	}
+	public void deletar(int id) {
+		buscar(id);//ou existe, ou irá gerar exception
+		repo.deleteById(id);
+	}
 	
-	public Autor update(Autor obj) {
+	public Autor editar(Autor obj) {
 		Autor newObj = buscar(obj.getId());
-		updateData(newObj, obj);
+		modificar(newObj, obj);
 		return repo.save(newObj);
 		
 	}
-	
-	public void delete(int id) {
-		buscar(id);//ou existe, ou irá gerar exception
-		try {
-			repo.deleteById(id);
-		}
-		catch (DataIntegrityViolationException e) {
-			throw new ErroIntegridade("Sem permissão para excluir um autor que possui postagens ou comentários");
-		}
-	}
-	
-	private void updateData(Autor newObj, Autor obj) {
+	private void modificar(Autor newObj, Autor obj) {
 		newObj.setDescricao(obj.getDescricao());
 		newObj.setNome(obj.getNome());
 	}
